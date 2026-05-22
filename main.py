@@ -1,14 +1,17 @@
+from fastapi import FastAPI
+from events.base_event import BaseEvent
 from events.payments.payment_created_event import payment_created
 from events.trade.trade_executed_event import trade_executed
 from events.iot.temperature_recorded_event import temperature_recorded
 
 
+app = FastAPI()
 
-print("\n===== PAYMENT EVENT =====")
-print(payment_created.model_dump_json(indent=2))
-
-print("\n===== TRADE EVENT =====")
-print(trade_executed.model_dump_json(indent=2))
-
-print("\n===== TEMPERATURE EVENT =====")
-print(temperature_recorded.model_dump_json(indent=2)) 
+@app.post("/api/v1/events")
+def postEvent(e : BaseEvent):
+    print(e)
+    return {
+  "message": "event received",
+  "event_id": str(e.event_id),
+  "event_type": e.event_type
+}
